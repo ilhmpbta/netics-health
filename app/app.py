@@ -1,6 +1,6 @@
 import time
 from flask import Flask, jsonify
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 app = Flask(__name__)
 START_TIME = time.time()
@@ -14,7 +14,7 @@ def health():
         "nama": "Bintang Ilham Pabeta",
         "nrp": "5025241152",
         "status": "UP",
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S"),
         "uptime": f"{int(uptime_seconds)} seconds"
     }
     
