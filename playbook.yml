@@ -1,0 +1,62 @@
+---
+- name: Deploy API via GHCR
+  hosts: vps_azure
+  become: yes
+  tasks:
+    - name: Dependency check
+      apt:
+        name: 
+          - python3-pip
+          - python3-docker
+        state: present
+        update_cache: yes
+
+    - name: Pull docker image
+      docker_image:
+        name: "ghcr.io/ilhmpbta/api-health:latest"
+        source: pull
+        force_source: yes
+
+    - name: Delete duplicate instance
+      docker_container:
+        name: api-health
+        state: absent
+
+    - name: Run API
+      docker_container:
+        name: api-health
+        image: "ghcr.io/ilhmpbta/api-health:latest"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "127.0.0.1:6767:6767"
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Deploy Nginx Config
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/sites-available/api_health
+      notify: restart nginx
+
+    - name: Aktifkan Nginx Config
+      file:
+        src: /etc/nginx/sites-available/api_health
+        dest: /etc/nginx/sites-enabled/api_health
+        state: link
+
+    - name: Delete Default Nginx Config
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

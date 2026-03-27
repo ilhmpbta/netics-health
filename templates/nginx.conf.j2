@@ -1,0 +1,10 @@
+server {
+    listen 80;
+    server_name {{ ansible_host }};
+
+    location /health {
+        proxy_pass http://127.0.0.1:6767;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
