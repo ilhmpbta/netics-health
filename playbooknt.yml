@@ -1,0 +1,7 @@
+---
+- name: Playbookn't Testing
+  hosts: vps_azure
+  tasks:
+    - name: Playbookn't gaming
+      ansible.builtin.shell: |
+        echo "[$(date +'%Y-%m-%d %H:%M:%S')] Playbookn't YML isn't it" >> ~/log.txt

@@ -15,7 +15,8 @@ def health():
         "nrp": "5025241152",
         "status": "UP",
         "timestamp": datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S"),
-        "uptime": f"{int(uptime_seconds)} seconds"
+        "uptime": f"{int(uptime_seconds)} seconds",
+        "demo": "ok"
     }
     
     return jsonify(data)
